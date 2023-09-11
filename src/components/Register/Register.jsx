@@ -4,7 +4,7 @@ import './register.css'
 
 const Register = () => {
   return (
-    <section id='register'>
+    <section id='register' className='flex-between'>
         <RegistrationForm />
         <div className="image-container">
 

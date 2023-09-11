@@ -1,59 +1,69 @@
-import {useState, useRef} from 'react'
+import {useState, useRef, useContext} from 'react'
 import './register.css'
-import upload from './upload.svg'
+import upload from '/src/assets/register/upload.svg'
+import {ModalContext} from '../App/App'
 
 const defaultValues = {
-    fullName: "",
-    phoneNumber: "",
+    fullname: "",
+    phone: "",
     email: "",
     address: "",
-    laptopSpec: "Select Laptop Type",
-    laptopReceipt: {}
+    laptop: "Select Laptop Type",
+    receipt: ""
 }
 
 const RegistrationForm = () => {
     const [toggle, setToggle] = useState(false)
     const [register, setRegister] = useState(defaultValues)
     const fileInput = useRef(null)
+    const handleModal = useContext(ModalContext)
+    const [focused, setFocused] = useState("false")
+
+    
+
+    const handleFocus = (e) => {
+        e.target.className = "true"
+    }
 
     const selectSpecification = (name) => {
-        setRegister({...register, laptopSpec: name})
+        setRegister({...register, laptop: name})
         setToggle(false)
     }
 
     const collectFile = () => {
         fileInput.current.click()
     }
-  
+
     const submitForm = (e) => {
         e.preventDefault()
-        console.log(register)
-        const formData = new FormData()
-        // formData.append("user", register)
-        for (const [key, value] of Object.entries(register)){
-            formData.append(key, value)
-        }
 
-        // for (const [key, value] of formData.entries()){
-        //     console.log(key, value)
-        // }
-        fetch("https://testbackend-ya01.onrender.com/api/v1/users/register", {
-            // mode: "no-cors",
-            method: "POST",
-            body: formData,
+        if (register.laptop === "Select Laptop Type")  {
+            alert("Select Laptop Type")
+            return
+        } 
+        setFocused("false")
+                
+        const url = new URL('https://testbackend-ya01.onrender.com/api/v1/users/register')
+        Object.keys(register).forEach(key => url.searchParams.append(key, register[key]))
+        const formData = new FormData()
+        formData.append("receipt", register.receipt)
+
+        fetch(url, {
+            method: 'POST',  
             headers: {
-                "Access-Control-Allow-Headers" : "Content-Type",
-                 "Access-Control-Allow-Origin": "*",
-            //    'Content-Type': 'application/json',
-            //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
-           }
-        //    ,
-        //     header: {
-        //         'Access-Control-Allow-Origin': '*'
-        //     }
-        })
+                'accept': 'application/json',
+            },
+            body: formData
+         })
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data =>  {
+               setRegister(defaultValues)
+               handleModal(true)
+               console.log(data)
+         })
+        .catch((err) => {
+            console.log("Error Message: ", err.message)
+        })
     }
 
   return (
@@ -64,58 +74,98 @@ const RegistrationForm = () => {
         </div>
         <form onSubmit={submitForm}>
             <div className="input-frame">
-                <label htmlFor="fullName">Full name</label>
+                <label htmlFor="fullname">Full name</label>
                 <input 
                   type="text" 
-                  name='fullName' 
-                  id='fullName'
+                  name='fullname' 
+                  id='fullname'
                   placeholder='John Doe' 
-                  value={register.fullName} 
-                  onChange={(e)=> setRegister({...register, fullName: e.target.value})}
+                  value={register.fullname} 
+                  pattern = "^[A-Za-z ]{6,}$"
+                  onChange={(e)=> setRegister({...register, fullname: e.target.value})}
+                  required
+                  onBlur={(e)=> handleFocus(e)}
+                  className={focused}
                   />
+                <span className='error-message'>Full Name should be more than five letters</span>
             </div>
             <div className="input-frame">
-                <label htmlFor="phoneNumber">Phone Number</label>
+                <label htmlFor="phone">Phone Number</label>
                 <input 
                    type="text" 
-                   name='phoneNumber' 
-                   id='phoneNumber' 
+                   name='phone' 
+                   id='phone' 
                    placeholder='+234000000000'
-                   value={register.phoneNumber} 
-                   onChange={(e)=> setRegister({...register, phoneNumber: e.target.value})}/>
+                   value={register.phone} 
+                   pattern="^[+0-9]{11,}$"
+                   onChange={(e)=> setRegister({...register, phone: e.target.value})}
+                   required
+                   onBlur={(e)=> handleFocus(e)}
+                   className={focused}
+                   />
+                <span className='error-message'>Please enter a valid phone number</span>
             </div>
             <div className="input-frame">
                 <label htmlFor="email">Email</label>
-                <input type="email" name='email' id='email' placeholder='mail@example.com'
-                 value={register.email} 
-                 onChange={(e)=> setRegister({...register, email: e.target.value})}/>
+                <input 
+                type="email" 
+                name='email' 
+                id='email'
+                placeholder='mail@example.com'
+                value={register.email} 
+                onChange={(e)=> setRegister({...register, email: e.target.value})}
+                onBlur={(e)=> handleFocus(e)}
+                className={focused}
+                required
+                />
+                <span className='error-message'>Please enter a valid email</span>
             </div>
             <div className="input-frame">
                 <label htmlFor="address">Address</label>
-                <input type="text" name='address' id='address' placeholder='230 Crescent Avenue'
-                 value={register.address} 
-                 onChange={(e)=> setRegister({...register, address: e.target.value})}/>
+                <input 
+                type="text" 
+                name='address' 
+                id='address' 
+                placeholder='230 Crescent Avenue'
+                value={register.address} 
+                onChange={(e)=> setRegister({...register, address: e.target.value})}
+                onBlur={(e)=> handleFocus(e)}
+                className={focused}
+                required
+               />
+                <span className='error-message'>Address should be more than five characters</span>
             </div>
             <div className="input-frame">
                 <label htmlFor="specification">Laptop Specification</label>
                 <div id="specification">
-                    <p onClick={()=> setToggle(!toggle)}><span>{register.laptopSpec}</span> <i className="fas fa-chevron-down">v</i></p>
+                    <p className='flex-between bg-white' onClick={()=> setToggle(!toggle)}><span>{register.laptop}</span> <i className="fas fa-chevron-down"></i></p>
                    {toggle &&
-                     <ul id="select-list">
+                     <ul id="select-list" className='bg-white'>
                        <li onClick={()=> selectSpecification("HP")}>HP</li>
                        <li onClick={()=> selectSpecification("DELL")}>DELL</li>
                        <li onClick={()=> selectSpecification("ACER")}>ACER</li>
                        <li onClick={()=> selectSpecification("MACBOOK")}>MACBOOK</li>
                      </ul>
                    }
+                   <span className='error-message'>Name is invalid</span>
               </div>
             </div>
-            <div className="input-frame">
+            <div className="input-frame file">
                 <label htmlFor="receipt">Upload receipt of old laptop</label>
-                <input type="file" accept="image/*" hidden name='receipt' id='receipt' ref={fileInput} onChange={(e)=> setRegister({...register, laptopReceipt: e.target.files[0]})} />
-                <div className="file-upload" onClick={collectFile}>
+                <input 
+                type="file" 
+                accept="image/*"
+                name='receipt' 
+                id='receipt' 
+                ref={fileInput} 
+                onChange={(e)=> setRegister({...register, receipt: e.target.files[0]})}
+                required
+                />
+                <span className='error-message'>File type is invalid</span>
+                <div className="file-upload bg-white" onClick={collectFile}>
                     <img src={upload} alt="uplaod icon" />
-                </div>
+                    <span>{register.receipt.name && register.receipt.name}</span>
+                </div>      
             </div>
             <button type='submit'>Submit</button>
         </form>

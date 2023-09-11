@@ -1,0 +1,18 @@
+span.error-message {
+    font-size: 14px;
+    padding: 3px;
+    color: var(--red);
+    display: none;
+}
+
+input:invalid[class="true"] {
+    border: 1px solid var(--red);
+}
+
+input:invalid[class="true"] ~ span.error-message {
+    display: block;
+}
+
+/* input:invalid ~ span.error-message {
+    display: block;
+} */

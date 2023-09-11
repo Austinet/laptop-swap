@@ -1,6 +1,7 @@
 {
   "name": "laptop-swap",
   "homepage": "https://austinet.github.io/laptop-swap",
+  "proxy": "https://testbackend-ya01.onrender.com",
   "private": true,
   "version": "0.0.0",
   "type": "module",

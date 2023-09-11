@@ -1,19 +1,29 @@
-#register {
-    min-height: 100vh;
+@import url(./validationErrors.css);
+.flex-between {
     display: flex;
     justify-content: space-between;
 }
 
+input,
+.bg-white  {
+    background: var(--white);
+}
+
 .image-container {
-    background: url('./laptop.svg') no-repeat;
+    background: url('/src/assets/register/laptop.svg') no-repeat;
     background-size: cover;
+    background-position: center;
     width: 52%;
 }
 
 .form-container {
-    background: #f1f1f1a1;
+    background: var(--light-grey);
     width: 48%;
-    padding: 94px 0 60px 60px;
+    padding: 94px 0 60px 4.2vw;
+}
+
+h2, p, label, input  {
+    letter-spacing: 0em;
 }
 
 .form-header {
@@ -24,110 +34,147 @@
     font-size: 2rem;
     font-weight: 600;
     line-height: 39px;
-    letter-spacing: 0em;
-    color: #000;
 }
 
 .form-header p{
-    font-size: 1rem;
     font-weight: 300;
     line-height: 19px;
-    letter-spacing: 0em;
-    color: #000;
 }
 
-
 .input-frame label {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-size: 1.05rem;
     font-weight: 500;
     line-height: 24px;
-    letter-spacing: 0em;
     display: block;
-    color: #1F1F1F;
+    color: var(--black);
     margin: 1.1rem 0 0.6rem;
 }
 
-input {
-    width: 500px;
+input,
+#specification p {
+    width: 80%;
     padding: 20px 24px;
     border-radius: 8px;
-    background: #FFF;
-    border: none;
-    font-size: 16px;
-    font-weight: 400;
     line-height: 24px;
-    letter-spacing: 0em;
-    outline: none;
 }
 
-::placeholder {
-    color: #B3B3B3;
+input {
+    border: none;
+    font-weight: 400;
+    outline: none;
+    font-size: 1rem;
+}
+
+input::placeholder {
+    color: var(--grey);
+}
+
+#specification p {
+    align-items: center;
+}
+
+#specification ul {
+    margin-top: 0.5rem;
+    padding: 10px 0;
+    border-radius: 8px;
+    position: absolute;
+    z-index: 2;
+}
+
+#specification li {
+    list-style: none; 
+    padding: 0.3rem 24px;
+    cursor: pointer;
 }
 
 input[type="file"] {
-    width: 120px;
+    width: 100px;
+}
+
+.file {
+    position: relative;
+    margin-bottom: 3.2rem;
 }
 
 .file-upload {
-    background: #fff;
     width: 120px;
     text-align: center;
     padding: 12px 24px;
     border-radius: 8px;
     margin-bottom: 2rem;
+    position: absolute;
+    top: 40%;
+}
+
+.file-upload span{
+    color: var(--green);
+    font-size: 12px;
 }
 
 .form-container button {
     width: 150px;   
     padding: 1rem 1.5rem;
     border-radius: 8px;
-    background: #335CA6;
+    background: var(--blue);
     border: none;
-    color: #fff;
+    color: var(--white);
     font-size: 1.2rem;
     cursor: pointer;
     outline: none;
 }
 
-.form-container button:hover {
-    background: #335ba6a8;
-}
-
-
-#specification p {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    max-width: 500px;
-    padding: 20px 24px;
-    border-radius: 8px;
-    background: #FFF;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0em;
-}
-
-#specification ul {
-    margin-top: 0.5rem;
-    width: 150px;
-    padding: 10px 0;
-    border-radius: 8px;
-    position: absolute;
-    z-index: 2;
-    background-color: #fff;
-}
-
-#specification li {
-    list-style: none; 
-    padding: 0.3rem 24px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
+.form-container button:hover,
 #specification li:hover {
-    background-color: #335ba6c7;
-    color: #fff;
+    background-color: var(--greyish-blue);
+    color: var(--white);
+}
+
+@media(max-width: 800px) {
+    #register {
+        flex-direction: column-reverse;
+    }
+
+    .image-container {
+        height: 50vh;
+    }
+    
+    .form-container {
+        padding: 2rem 1.5rem;
+    }
+
+    input,
+    #specification p,
+    .image-container,
+    .form-container{
+        width: 100%;
+    }  
+}
+
+@media(max-width: 400px) {
+    html {
+        font-size: 15px;
+    } 
+
+    .image-container {
+        height: 40vh;
+    }
+
+    .form-header h2 {
+        font-size: 1.7rem;
+    }
+
+    input,
+    #specification p,
+    .form-container button{
+        padding: 1rem 1.1rem;
+    }  
+
+    .file-upload {
+        width: 100px;
+        padding: 10px;
+    }
+
+    .form-container button {
+        width: 110px;   
+    }
 }
